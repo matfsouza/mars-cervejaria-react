@@ -12,10 +12,12 @@ import { beerImageOptions, initialBeers, initialClients, initialOrders } from ".
 import { useLocalStorage } from "./hooks/useLocalStorage.js";
 import { assetPath } from "./utils/assetPath.js";
 
+// Paginas que so podem abrir depois do login.
 const protectedPages = ["cervejas", "clientes", "pedidos", "relatorio"];
 
 export default function App() {
   const { user } = useAuth();
+  // Esses estados ficam salvos no navegador pelo useLocalStorage.
   const [ageAccepted, setAgeAccepted] = useLocalStorage("mars:ageAccepted", false);
   const [page, setPage] = useLocalStorage("mars:currentPage", "inicio");
   const [beers, setBeers] = useLocalStorage("mars:beers", initialBeers);
@@ -26,6 +28,7 @@ export default function App() {
     return <AgeGate onAccept={() => setAgeAccepted(true)} />;
   }
 
+  // Se tentar entrar em pagina protegida sem usuario, abre o login.
   const currentPage = protectedPages.includes(page) && !user ? "login" : page;
 
   return (
@@ -38,6 +41,7 @@ export default function App() {
   );
 
   function renderPage(activePage) {
+    // Aqui escolho qual componente vai aparecer na tela.
     if (activePage === "login") {
       return <Login onSuccess={() => setPage("cervejas")} />;
     }
@@ -89,6 +93,7 @@ export default function App() {
           description="Pedidos ligados a um cliente e a uma cerveja por meio dos ids."
           items={orders}
           setItems={setOrders}
+          // Campos e colunas de pedidos dependem dos clientes e cervejas cadastrados.
           fields={createOrderFields(clients, beers)}
           columns={createOrderColumns(clients, beers)}
           emptyForm={emptyOrder}
@@ -114,6 +119,7 @@ const emptyBeer = {
   descricao: "",
 };
 
+// Campos que aparecem no formulario de cervejas.
 const beerFields = [
   { key: "nome", label: "Nome", required: true },
   { key: "estilo", label: "Estilo", required: true },
@@ -124,6 +130,7 @@ const beerFields = [
   { key: "descricao", label: "Descricao", type: "textarea", required: true },
 ];
 
+// Colunas que aparecem na tabela de cervejas.
 const beerColumns = [
   { key: "nome", label: "Nome" },
   { key: "estilo", label: "Estilo" },
@@ -139,6 +146,7 @@ const emptyClient = {
   cidade: "",
 };
 
+// Campos que aparecem no formulario de clientes.
 const clientFields = [
   { key: "nome", label: "Nome", required: true },
   { key: "email", label: "E-mail", type: "email", required: true },
@@ -146,6 +154,7 @@ const clientFields = [
   { key: "cidade", label: "Cidade", required: true },
 ];
 
+// Colunas que aparecem na tabela de clientes.
 const clientColumns = [
   { key: "nome", label: "Nome" },
   { key: "email", label: "E-mail" },
@@ -200,11 +209,13 @@ function createOrderColumns(clients, beers) {
     {
       key: "clienteId",
       label: "Cliente",
+      // No read do pedido, o find busca o cliente pelo id.
       render: (item) => clients.find((client) => client.id === item.clienteId)?.nome || "Cliente removido",
     },
     {
       key: "cervejaId",
       label: "Cerveja",
+      // Mesma ideia aqui, mas buscando a cerveja pelo id.
       render: (item) => beers.find((beer) => beer.id === item.cervejaId)?.nome || "Cerveja removida",
     },
     { key: "quantidade", label: "Qtd." },
@@ -214,6 +225,7 @@ function createOrderColumns(clients, beers) {
 }
 
 function formatCurrency(value) {
+  // Formata numero como moeda brasileira.
   return Number(value).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
@@ -222,5 +234,6 @@ function formatCurrency(value) {
 
 function formatDate(value) {
   if (!value) return "-";
+  // Coloquei meio-dia para evitar diferenca de fuso na data.
   return new Date(`${value}T12:00:00`).toLocaleDateString("pt-BR");
 }

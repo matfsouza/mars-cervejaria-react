@@ -14,14 +14,17 @@ export default function CrudPage({
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState("");
 
+  // Copia a lista e ordena, sem mexer na lista original.
   const orderedItems = useMemo(() => [...items].sort((a, b) => a.nome?.localeCompare(b.nome) || 0), [items]);
 
   function updateField(key, value) {
     setMessage("");
+    // Atualiza apenas o campo que foi digitado.
     setForm((currentForm) => ({ ...currentForm, [key]: value }));
   }
 
   function resetForm() {
+    // Volta o formulario para o estado inicial.
     setForm(emptyForm);
     setEditingId(null);
     setMessage("");
@@ -60,6 +63,7 @@ export default function CrudPage({
   }
 
   function handleEdit(item) {
+    // Joga os dados do item no formulario para editar.
     setForm(item);
     setEditingId(item.id);
     setMessage("");
@@ -84,6 +88,7 @@ export default function CrudPage({
         </div>
 
         <form className="crud-form" onSubmit={handleSubmit}>
+          {/* Monta os inputs de acordo com os campos recebidos por props. */}
           {fields.map((field) => (
             <FormField key={field.key} field={field} value={form[field.key] ?? ""} onChange={updateField} />
           ))}
@@ -113,8 +118,10 @@ export default function CrudPage({
               </tr>
             </thead>
             <tbody>
+              {/* O map cria uma linha da tabela para cada registro. */}
               {orderedItems.map((item) => (
                 <tr key={item.id}>
+                  {/* As colunas tambem vem por props, por isso o CRUD e reaproveitado. */}
                   {columns.map((column) => (
                     <td key={column.key}>{column.render ? column.render(item) : item[column.key]}</td>
                   ))}
@@ -138,10 +145,12 @@ export default function CrudPage({
 
 function FormField({ field, value, onChange }) {
   function handleChange(event) {
+    // Todo input chama o mesmo onChange, mudando apenas a chave do campo.
     onChange(field.key, event.target.value);
   }
 
   if (field.type === "textarea") {
+    // Campo maior para descricao.
     return (
       <label>
         {field.label}
@@ -157,6 +166,7 @@ function FormField({ field, value, onChange }) {
   }
 
   if (field.type === "select") {
+    // Select usado para imagem, cliente, cerveja e status.
     return (
       <label>
         {field.label}
@@ -198,6 +208,7 @@ function normalizeForm(form, fields) {
 }
 
 function createId() {
+  // Cria um id simples para identificar cada registro.
   if (window.crypto?.randomUUID) return window.crypto.randomUUID();
   return String(Date.now());
 }

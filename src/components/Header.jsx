@@ -36,6 +36,7 @@ export default function Header({ currentPage, onNavigate }) {
           </button>
         ))}
 
+        {/* Menu administrativo so aparece quando tem usuario logado. */}
         {user &&
           adminPages.map((page) => (
             <button

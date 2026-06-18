@@ -31,6 +31,7 @@ export default function Home({ beers, onNavigate }) {
         </div>
 
         <div className="beer-grid">
+          {/* Cards da pagina inicial feitos a partir da lista de cervejas. */}
           {beers.map((beer) => (
             <article className="beer-card" key={beer.id}>
               <img src={assetPath(beer.imagem)} alt={beer.nome} />

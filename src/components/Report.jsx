@@ -1,11 +1,14 @@
 export default function Report({ beers, clients, orders }) {
   // Junta pedidos, clientes e cervejas usando os ids cadastrados.
   const rows = orders.map((order) => {
+    // Cada pedido tem apenas os ids, entao procuro os dados completos.
     const client = clients.find((item) => item.id === order.clienteId);
     const beer = beers.find((item) => item.id === order.cervejaId);
     const quantidade = Number(order.quantidade);
+    // Subtotal do pedido: preco da cerveja vezes quantidade.
     const subtotal = Number(beer?.preco || 0) * quantidade;
 
+    // Retorna uma linha ja pronta para mostrar na tabela.
     return {
       ...order,
       cliente: client?.nome || "Cliente removido",
@@ -57,6 +60,7 @@ export default function Report({ beers, clients, orders }) {
               </tr>
             </thead>
             <tbody>
+              {/* Mostra uma linha do relatorio para cada pedido. */}
               {rows.map((row) => (
                 <tr key={row.id}>
                   <td>{formatDate(row.data)}</td>
