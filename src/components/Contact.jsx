@@ -1,3 +1,5 @@
+import { assetPath } from "../utils/assetPath.js";
+
 export default function Contact() {
   return (
     <main className="page">
@@ -15,10 +17,10 @@ export default function Contact() {
 
           <div className="social-row">
             <a href="https://www.instagram.com/_marsdesigner/" target="_blank" rel="noreferrer">
-              <img src="/assets/instagram.svg" alt="Instagram" />
+              <img src={assetPath("instagram.svg")} alt="Instagram" />
             </a>
             <a href="https://whatsa.me/5561983731359" target="_blank" rel="noreferrer">
-              <img src="/assets/whatsapp.svg" alt="WhatsApp" />
+              <img src={assetPath("whatsapp.svg")} alt="WhatsApp" />
             </a>
           </div>
         </div>

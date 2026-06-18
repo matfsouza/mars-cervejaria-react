@@ -1,4 +1,5 @@
 export default function Report({ beers, clients, orders }) {
+  // Junta pedidos, clientes e cervejas usando os ids cadastrados.
   const rows = orders.map((order) => {
     const client = clients.find((item) => item.id === order.clienteId);
     const beer = beers.find((item) => item.id === order.cervejaId);
@@ -15,6 +16,7 @@ export default function Report({ beers, clients, orders }) {
     };
   });
 
+  // Soma todos os subtotais para mostrar o total vendido.
   const total = rows.reduce((sum, row) => sum + row.subtotal, 0);
 
   return (

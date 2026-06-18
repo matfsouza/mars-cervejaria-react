@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
+import { assetPath } from "../utils/assetPath.js";
 
 export default function Login({ onSuccess }) {
   const { login } = useAuth();
@@ -23,7 +24,7 @@ export default function Login({ onSuccess }) {
   return (
     <main className="page page-centered">
       <section className="login-card">
-        <img src="/assets/mars-logo.svg" alt="MARS Cervejaria" />
+        <img src={assetPath("mars-logo.svg")} alt="MARS Cervejaria" />
         <h1>Login administrativo</h1>
         <p className="muted">Acesso usado para cadastrar cervejas, clientes e pedidos.</p>
 

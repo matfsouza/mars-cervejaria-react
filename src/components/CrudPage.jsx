@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 
+// CRUD generico usado nas telas de cervejas, clientes e pedidos.
 export default function CrudPage({
   title,
   description,
@@ -29,6 +30,7 @@ export default function CrudPage({
   function handleSubmit(event) {
     event.preventDefault();
 
+    // Procura o primeiro campo obrigatorio que ficou vazio.
     const missingField = fields.find((field) => {
       const value = form[field.key];
       return field.required && !String(value ?? "").trim();
@@ -42,11 +44,13 @@ export default function CrudPage({
     const cleanedForm = normalizeForm(form, fields);
 
     if (editingId) {
+      // Quando esta editando, troca apenas o item com o mesmo id.
       setItems((currentItems) =>
         currentItems.map((item) => (item.id === editingId ? { ...cleanedForm, id: editingId } : item))
       );
       setMessage("Registro atualizado.");
     } else {
+      // Quando e cadastro novo, adiciona um id e coloca no final da lista.
       setItems((currentItems) => [...currentItems, { ...cleanedForm, id: createId() }]);
       setMessage("Registro cadastrado.");
     }
@@ -65,6 +69,7 @@ export default function CrudPage({
     const confirmed = window.confirm("Deseja excluir este registro?");
     if (!confirmed) return;
 
+    // Remove da lista o item que tem o id escolhido.
     setItems((currentItems) => currentItems.filter((item) => item.id !== id));
     if (editingId === id) resetForm();
   }
@@ -184,6 +189,7 @@ function FormField({ field, value, onChange }) {
 }
 
 function normalizeForm(form, fields) {
+  // Converte campos numericos antes de salvar.
   return fields.reduce((newForm, field) => {
     const value = form[field.key];
     newForm[field.key] = field.type === "number" ? Number(value) : value;

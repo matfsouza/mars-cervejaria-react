@@ -1,4 +1,5 @@
 import { useAuth } from "../context/AuthContext.jsx";
+import { assetPath } from "../utils/assetPath.js";
 
 const publicPages = [
   { id: "inicio", label: "Inicio" },
@@ -20,7 +21,7 @@ export default function Header({ currentPage, onNavigate }) {
   return (
     <header className="site-header">
       <button className="brand-button" type="button" onClick={() => onNavigate("inicio")}>
-        <img src="/assets/mars-logo-white.svg" alt="MARS" />
+        <img src={assetPath("mars-logo-white.svg")} alt="MARS" />
       </button>
 
       <nav className="main-nav" aria-label="Navegacao principal">

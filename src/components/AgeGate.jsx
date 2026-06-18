@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { assetPath } from "../utils/assetPath.js";
 
 export default function AgeGate({ onAccept }) {
   const [blocked, setBlocked] = useState(false);
@@ -6,9 +7,9 @@ export default function AgeGate({ onAccept }) {
   if (blocked) {
     return (
       <main className="age-page">
-        <img className="particles" src="/assets/particulas.png" alt="" />
+        <img className="particles" src={assetPath("particulas.png")} alt="" />
         <section className="age-content">
-          <img src="/assets/mars-logo-white.svg" alt="MARS Cervejaria" />
+          <img src={assetPath("mars-logo-white.svg")} alt="MARS Cervejaria" />
           <div>
             <p className="age-title">Infelizmente voce nao pode acessar este site</p>
             <div className="age-actions">
@@ -17,7 +18,7 @@ export default function AgeGate({ onAccept }) {
               </button>
             </div>
           </div>
-          <img className="sad-face" src="/assets/triste.svg" alt="" />
+          <img className="sad-face" src={assetPath("triste.svg")} alt="" />
         </section>
       </main>
     );
@@ -25,9 +26,9 @@ export default function AgeGate({ onAccept }) {
 
   return (
     <main className="age-page">
-      <img className="particles" src="/assets/particulas.png" alt="" />
+      <img className="particles" src={assetPath("particulas.png")} alt="" />
       <section className="age-content">
-        <img src="/assets/mars-logo-white.svg" alt="MARS Cervejaria" />
+        <img src={assetPath("mars-logo-white.svg")} alt="MARS Cervejaria" />
         <div>
           <p className="age-title">A MARS se preocupa com o consumo consciente</p>
           <p className="age-question">Voce tem mais de 18 anos?</p>

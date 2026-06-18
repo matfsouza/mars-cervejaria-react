@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { assetPath } from "../utils/assetPath.js";
 
 const emptyInterest = {
   nome: "",
@@ -82,7 +83,7 @@ export default function Acquire({ beers }) {
           </form>
         </div>
 
-        <img className="acquire-beers" src="/assets/mars-beers.png" alt="Cervejas MARS" />
+        <img className="acquire-beers" src={assetPath("mars-beers.png")} alt="Cervejas MARS" />
       </section>
     </main>
   );

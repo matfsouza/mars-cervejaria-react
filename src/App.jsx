@@ -10,6 +10,7 @@ import Report from "./components/Report.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
 import { beerImageOptions, initialBeers, initialClients, initialOrders } from "./data/initialData.js";
 import { useLocalStorage } from "./hooks/useLocalStorage.js";
+import { assetPath } from "./utils/assetPath.js";
 
 const protectedPages = ["cervejas", "clientes", "pedidos", "relatorio"];
 
@@ -29,7 +30,7 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <img className="particles" src="/assets/particulas.png" alt="" />
+      <img className="particles" src={assetPath("particulas.png")} alt="" />
       <Header currentPage={currentPage} onNavigate={setPage} />
       {renderPage(currentPage)}
       <footer className="site-footer">Criado e desenvolvido por Mars Design Grafico @</footer>
@@ -167,6 +168,7 @@ function createOrderFields(clients, beers) {
       label: "Cliente",
       type: "select",
       required: true,
+      // O pedido guarda o id do cliente, mas mostra o nome no select.
       options: clients.map((client) => ({ value: client.id, label: client.nome })),
     },
     {
@@ -174,6 +176,7 @@ function createOrderFields(clients, beers) {
       label: "Cerveja",
       type: "select",
       required: true,
+      // O pedido guarda o id da cerveja, mas mostra o nome no select.
       options: beers.map((beer) => ({ value: beer.id, label: beer.nome })),
     },
     { key: "quantidade", label: "Quantidade", type: "number", min: "1", required: true },

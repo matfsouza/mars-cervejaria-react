@@ -1,3 +1,5 @@
+import { assetPath } from "../utils/assetPath.js";
+
 export default function Catalog({ beers }) {
   return (
     <main className="page">
@@ -10,7 +12,7 @@ export default function Catalog({ beers }) {
         <div className="catalog-list">
           {beers.map((beer) => (
             <article className="catalog-item" key={beer.id}>
-              <img src={`/assets/${beer.imagem}`} alt={beer.nome} />
+              <img src={assetPath(beer.imagem)} alt={beer.nome} />
               <div>
                 <h2>{beer.nome}</h2>
                 <p className="beer-style">
