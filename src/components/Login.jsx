@@ -4,24 +4,20 @@ import { assetPath } from "../utils/assetPath.js";
 
 export default function Login({ onSuccess }) {
   const { login } = useAuth();
-  // Estados dos campos do formulario de login.
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
-    // Chama a funcao de login que esta no contexto.
     const result = login(email, password);
 
     if (!result.ok) {
-      // Se der erro, mostra a mensagem na tela.
       setMessage(result.message);
       return;
     }
 
     setMessage("");
-    // Depois que loga, entra na area administrativa.
     onSuccess();
   }
 

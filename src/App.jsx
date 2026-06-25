@@ -6,18 +6,17 @@ import CrudPage from "./components/CrudPage.jsx";
 import Header from "./components/Header.jsx";
 import Home from "./components/Home.jsx";
 import Login from "./components/Login.jsx";
+import OrderManager from "./components/OrderManager.jsx";
 import Report from "./components/Report.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
 import { beerImageOptions, initialBeers, initialClients, initialOrders } from "./data/initialData.js";
 import { useLocalStorage } from "./hooks/useLocalStorage.js";
 import { assetPath } from "./utils/assetPath.js";
 
-// Paginas que so podem abrir depois do login.
 const protectedPages = ["cervejas", "clientes", "pedidos", "relatorio"];
 
 export default function App() {
   const { user } = useAuth();
-  // Esses estados ficam salvos no navegador pelo useLocalStorage.
   const [ageAccepted, setAgeAccepted] = useLocalStorage("mars:ageAccepted", false);
   const [page, setPage] = useLocalStorage("mars:currentPage", "inicio");
   const [beers, setBeers] = useLocalStorage("mars:beers", initialBeers);
@@ -28,7 +27,6 @@ export default function App() {
     return <AgeGate onAccept={() => setAgeAccepted(true)} />;
   }
 
-  // Se tentar entrar em pagina protegida sem usuario, abre o login.
   const currentPage = protectedPages.includes(page) && !user ? "login" : page;
 
   return (
@@ -41,7 +39,6 @@ export default function App() {
   );
 
   function renderPage(activePage) {
-    // Aqui escolho qual componente vai aparecer na tela.
     if (activePage === "login") {
       return <Login onSuccess={() => setPage("cervejas")} />;
     }
@@ -87,18 +84,7 @@ export default function App() {
     }
 
     if (activePage === "pedidos") {
-      return (
-        <CrudPage
-          title="CRUD de pedidos"
-          description="Pedidos ligados a um cliente e a uma cerveja por meio dos ids."
-          items={orders}
-          setItems={setOrders}
-          // Campos e colunas de pedidos dependem dos clientes e cervejas cadastrados.
-          fields={createOrderFields(clients, beers)}
-          columns={createOrderColumns(clients, beers)}
-          emptyForm={emptyOrder}
-        />
-      );
+      return <OrderManager orders={orders} setOrders={setOrders} clients={clients} beers={beers} />;
     }
 
     if (activePage === "relatorio") {
@@ -119,7 +105,6 @@ const emptyBeer = {
   descricao: "",
 };
 
-// Campos que aparecem no formulario de cervejas.
 const beerFields = [
   { key: "nome", label: "Nome", required: true },
   { key: "estilo", label: "Estilo", required: true },
@@ -130,7 +115,6 @@ const beerFields = [
   { key: "descricao", label: "Descricao", type: "textarea", required: true },
 ];
 
-// Colunas que aparecem na tabela de cervejas.
 const beerColumns = [
   { key: "nome", label: "Nome" },
   { key: "estilo", label: "Estilo" },
@@ -146,7 +130,6 @@ const emptyClient = {
   cidade: "",
 };
 
-// Campos que aparecem no formulario de clientes.
 const clientFields = [
   { key: "nome", label: "Nome", required: true },
   { key: "email", label: "E-mail", type: "email", required: true },
@@ -154,7 +137,6 @@ const clientFields = [
   { key: "cidade", label: "Cidade", required: true },
 ];
 
-// Colunas que aparecem na tabela de clientes.
 const clientColumns = [
   { key: "nome", label: "Nome" },
   { key: "email", label: "E-mail" },
@@ -162,78 +144,9 @@ const clientColumns = [
   { key: "cidade", label: "Cidade" },
 ];
 
-const emptyOrder = {
-  clienteId: "",
-  cervejaId: "",
-  quantidade: "",
-  status: "",
-  data: "",
-};
-
-function createOrderFields(clients, beers) {
-  return [
-    {
-      key: "clienteId",
-      label: "Cliente",
-      type: "select",
-      required: true,
-      // O pedido guarda o id do cliente, mas mostra o nome no select.
-      options: clients.map((client) => ({ value: client.id, label: client.nome })),
-    },
-    {
-      key: "cervejaId",
-      label: "Cerveja",
-      type: "select",
-      required: true,
-      // O pedido guarda o id da cerveja, mas mostra o nome no select.
-      options: beers.map((beer) => ({ value: beer.id, label: beer.nome })),
-    },
-    { key: "quantidade", label: "Quantidade", type: "number", min: "1", required: true },
-    {
-      key: "status",
-      label: "Status",
-      type: "select",
-      required: true,
-      options: [
-        { value: "Novo", label: "Novo" },
-        { value: "Separando", label: "Separando" },
-        { value: "Entregue", label: "Entregue" },
-      ],
-    },
-    { key: "data", label: "Data", type: "date", required: true },
-  ];
-}
-
-function createOrderColumns(clients, beers) {
-  return [
-    {
-      key: "clienteId",
-      label: "Cliente",
-      // No read do pedido, o find busca o cliente pelo id.
-      render: (item) => clients.find((client) => client.id === item.clienteId)?.nome || "Cliente removido",
-    },
-    {
-      key: "cervejaId",
-      label: "Cerveja",
-      // Mesma ideia aqui, mas buscando a cerveja pelo id.
-      render: (item) => beers.find((beer) => beer.id === item.cervejaId)?.nome || "Cerveja removida",
-    },
-    { key: "quantidade", label: "Qtd." },
-    { key: "status", label: "Status" },
-    { key: "data", label: "Data", render: (item) => formatDate(item.data) },
-  ];
-}
-
 function formatCurrency(value) {
-  // Formata numero como moeda brasileira.
   return Number(value).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
-}
-
-function formatDate(value) {
-  if (!value) return "-";
-  // Coloquei meio-dia para evitar diferenca de fuso na data.
-  return new Date(`${value}T12:00:00`).toLocaleDateString("pt-BR");
 }

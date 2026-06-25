@@ -1,25 +1,28 @@
-export default function Report({ beers, clients, orders }) {
-  // Junta pedidos, clientes e cervejas usando os ids cadastrados.
-  const rows = orders.map((order) => {
-    // Cada pedido tem apenas os ids, entao procuro os dados completos.
-    const client = clients.find((item) => item.id === order.clienteId);
-    const beer = beers.find((item) => item.id === order.cervejaId);
-    const quantidade = Number(order.quantidade);
-    // Subtotal do pedido: preco da cerveja vezes quantidade.
-    const subtotal = Number(beer?.preco || 0) * quantidade;
+import { getOrderItems } from "./OrderManager.jsx";
 
-    // Retorna uma linha ja pronta para mostrar na tabela.
-    return {
-      ...order,
-      cliente: client?.nome || "Cliente removido",
-      cerveja: beer?.nome || "Cerveja removida",
-      estilo: beer?.estilo || "-",
-      preco: beer?.preco || 0,
-      subtotal,
-    };
+export default function Report({ beers, clients, orders }) {
+  const rows = orders.flatMap((order) => {
+    const client = clients.find((item) => item.id === order.clienteId);
+
+    return getOrderItems(order).map((orderItem) => {
+      const beer = beers.find((item) => item.id === orderItem.cervejaId);
+      const quantidade = Number(orderItem.quantidade);
+      const subtotal = Number(beer?.preco || 0) * quantidade;
+
+      return {
+        id: `${order.id}-${orderItem.cervejaId}`,
+        pedidoId: order.id,
+        data: order.data,
+        status: order.status,
+        cliente: client?.nome || "Cliente removido",
+        cerveja: beer?.nome || "Cerveja removida",
+        estilo: beer?.estilo || "-",
+        quantidade,
+        subtotal,
+      };
+    });
   });
 
-  // Soma todos os subtotais para mostrar o total vendido.
   const total = rows.reduce((sum, row) => sum + row.subtotal, 0);
 
   return (
@@ -34,15 +37,15 @@ export default function Report({ beers, clients, orders }) {
         <div className="report-summary">
           <div>
             <span>Pedidos</span>
-            <strong>{rows.length}</strong>
+            <strong>{orders.length}</strong>
           </div>
           <div>
             <span>Total vendido</span>
             <strong>{formatCurrency(total)}</strong>
           </div>
           <div>
-            <span>Clientes</span>
-            <strong>{clients.length}</strong>
+            <span>Itens vendidos</span>
+            <strong>{rows.length}</strong>
           </div>
         </div>
 
@@ -51,6 +54,7 @@ export default function Report({ beers, clients, orders }) {
             <thead>
               <tr>
                 <th>Data</th>
+                <th>Pedido</th>
                 <th>Cliente</th>
                 <th>Cerveja</th>
                 <th>Estilo</th>
@@ -60,10 +64,10 @@ export default function Report({ beers, clients, orders }) {
               </tr>
             </thead>
             <tbody>
-              {/* Mostra uma linha do relatorio para cada pedido. */}
               {rows.map((row) => (
                 <tr key={row.id}>
                   <td>{formatDate(row.data)}</td>
+                  <td>{row.pedidoId.slice(-5)}</td>
                   <td>{row.cliente}</td>
                   <td>{row.cerveja}</td>
                   <td>{row.estilo}</td>
@@ -90,5 +94,6 @@ function formatCurrency(value) {
 }
 
 function formatDate(value) {
+  if (!value) return "-";
   return new Date(`${value}T12:00:00`).toLocaleDateString("pt-BR");
 }

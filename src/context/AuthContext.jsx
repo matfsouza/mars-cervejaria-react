@@ -7,16 +7,13 @@ const LOGIN_EMAIL = "admin@mars.com";
 const LOGIN_PASSWORD = "123456";
 
 export function AuthProvider({ children }) {
-  // Guarda o usuario logado no localStorage para manter a sessao.
   const [user, setUser] = useLocalStorage("mars:user", null);
 
   function login(email, password) {
-    // Validacao simples dos campos obrigatorios.
     if (!email.trim() || !password.trim()) {
       return { ok: false, message: "Preencha o e-mail e a senha." };
     }
 
-    // Login simulado, sem banco de dados.
     if (email === LOGIN_EMAIL && password === LOGIN_PASSWORD) {
       setUser({ name: "Equipe MARS", email });
       return { ok: true };
@@ -26,7 +23,6 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
-    // Apaga o usuario e bloqueia as telas administrativas.
     setUser(null);
   }
 

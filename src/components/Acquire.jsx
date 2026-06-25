@@ -13,7 +13,6 @@ export default function Acquire({ beers }) {
 
   function updateField(field, value) {
     setMessage("");
-    // Atualiza somente o campo alterado pelo usuario.
     setInterest((currentInterest) => ({ ...currentInterest, [field]: value }));
   }
 
@@ -25,7 +24,6 @@ export default function Acquire({ beers }) {
       return;
     }
 
-    // Busca a cerveja escolhida para mostrar o nome na mensagem.
     const selectedBeer = beers.find((beer) => beer.id === interest.cervejaId);
     setMessage(`Pedido de interesse enviado para ${selectedBeer?.nome}.`);
     setInterest(emptyInterest);
@@ -69,7 +67,6 @@ export default function Acquire({ beers }) {
               Cerveja
               <select value={interest.cervejaId} onChange={(event) => updateField("cervejaId", event.target.value)}>
                 <option value="">Selecione</option>
-                {/* Opcoes criadas com map a partir das cervejas cadastradas. */}
                 {beers.map((beer) => (
                   <option key={beer.id} value={beer.id}>
                     {beer.nome}

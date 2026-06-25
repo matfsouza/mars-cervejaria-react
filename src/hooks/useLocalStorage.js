@@ -10,7 +10,6 @@ export function useLocalStorage(key, initialValue) {
     }
   });
 
-  // Sempre que o valor muda, salva no navegador.
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(value));
   }, [key, value]);

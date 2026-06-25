@@ -10,7 +10,6 @@ export default function Catalog({ beers }) {
         </div>
 
         <div className="catalog-list">
-          {/* Catalogo dinamico: se cadastrar cerveja nova, aparece aqui. */}
           {beers.map((beer) => (
             <article className="catalog-item" key={beer.id}>
               <img src={assetPath(beer.imagem)} alt={beer.nome} />

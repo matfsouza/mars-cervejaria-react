@@ -59,24 +59,27 @@ export const initialOrders = [
   {
     id: "order-1",
     clienteId: "client-1",
-    cervejaId: "beer-1",
-    quantidade: 4,
+    items: [
+      { cervejaId: "beer-1", quantidade: 4 },
+      { cervejaId: "beer-3", quantidade: 2 },
+    ],
     status: "Separando",
     data: "2026-06-10",
   },
   {
     id: "order-2",
     clienteId: "client-2",
-    cervejaId: "beer-2",
-    quantidade: 2,
+    items: [{ cervejaId: "beer-2", quantidade: 2 }],
     status: "Entregue",
     data: "2026-06-11",
   },
   {
     id: "order-3",
     clienteId: "client-3",
-    cervejaId: "beer-3",
-    quantidade: 3,
+    items: [
+      { cervejaId: "beer-3", quantidade: 3 },
+      { cervejaId: "beer-1", quantidade: 1 },
+    ],
     status: "Novo",
     data: "2026-06-12",
   },

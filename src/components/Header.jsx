@@ -36,7 +36,6 @@ export default function Header({ currentPage, onNavigate }) {
           </button>
         ))}
 
-        {/* Menu administrativo so aparece quando tem usuario logado. */}
         {user &&
           adminPages.map((page) => (
             <button
@@ -54,8 +53,8 @@ export default function Header({ currentPage, onNavigate }) {
         {user ? (
           <>
             <span>{user.name}</span>
-            <button type="button" className="outline-button compact" onClick={logout}>
-              Sair
+            <button type="button" className="logout-button compact" onClick={logout}>
+              Logout
             </button>
           </>
         ) : (
