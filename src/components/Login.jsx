@@ -4,12 +4,16 @@ import { assetPath } from "../utils/assetPath.js";
 
 export default function Login({ onSuccess }) {
   const { login } = useAuth();
+
+  // Cada input controla seu proprio valor.
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
+
+    // A validacao principal fica no AuthContext.
     const result = login(email, password);
 
     if (!result.ok) {

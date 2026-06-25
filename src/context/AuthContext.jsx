@@ -7,6 +7,7 @@ const LOGIN_EMAIL = "admin@mars.com";
 const LOGIN_PASSWORD = "123456";
 
 export function AuthProvider({ children }) {
+  // Salvo o usuario para manter a sessao depois do refresh.
   const [user, setUser] = useLocalStorage("mars:user", null);
 
   function login(email, password) {
@@ -14,6 +15,7 @@ export function AuthProvider({ children }) {
       return { ok: false, message: "Preencha o e-mail e a senha." };
     }
 
+    // Login fake, sem backend.
     if (email === LOGIN_EMAIL && password === LOGIN_PASSWORD) {
       setUser({ name: "Equipe MARS", email });
       return { ok: true };
@@ -23,6 +25,7 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
+    // Sem usuario, as telas administrativas ficam bloqueadas.
     setUser(null);
   }
 

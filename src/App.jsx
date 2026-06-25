@@ -13,10 +13,13 @@ import { beerImageOptions, initialBeers, initialClients, initialOrders } from ".
 import { useLocalStorage } from "./hooks/useLocalStorage.js";
 import { assetPath } from "./utils/assetPath.js";
 
+// Telas que precisam de login.
 const protectedPages = ["cervejas", "clientes", "pedidos", "relatorio"];
 
 export default function App() {
   const { user } = useAuth();
+
+  // Dados principais do projeto salvos no navegador.
   const [ageAccepted, setAgeAccepted] = useLocalStorage("mars:ageAccepted", false);
   const [page, setPage] = useLocalStorage("mars:currentPage", "inicio");
   const [beers, setBeers] = useLocalStorage("mars:beers", initialBeers);
@@ -27,6 +30,7 @@ export default function App() {
     return <AgeGate onAccept={() => setAgeAccepted(true)} />;
   }
 
+  // Se tentar abrir CRUD sem login, cai na tela de login.
   const currentPage = protectedPages.includes(page) && !user ? "login" : page;
 
   return (
@@ -39,6 +43,7 @@ export default function App() {
   );
 
   function renderPage(activePage) {
+    // Aqui eu escolho qual componente aparece na tela.
     if (activePage === "login") {
       return <Login onSuccess={() => setPage("cervejas")} />;
     }
@@ -105,6 +110,7 @@ const emptyBeer = {
   descricao: "",
 };
 
+// Campos que o CRUD generico usa no cadastro de cervejas.
 const beerFields = [
   { key: "nome", label: "Nome", required: true },
   { key: "estilo", label: "Estilo", required: true },
@@ -130,6 +136,7 @@ const emptyClient = {
   cidade: "",
 };
 
+// Campos que o CRUD generico usa no cadastro de clientes.
 const clientFields = [
   { key: "nome", label: "Nome", required: true },
   { key: "email", label: "E-mail", type: "email", required: true },

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 
+// Componente reaproveitado para cervejas e clientes.
 export default function CrudPage({
   title,
   description,
@@ -13,6 +14,7 @@ export default function CrudPage({
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState("");
 
+  // Ordena a tabela sem mexer na lista original.
   const orderedItems = useMemo(() => [...items].sort((a, b) => a.nome?.localeCompare(b.nome) || 0), [items]);
 
   function updateField(key, value) {
@@ -29,6 +31,7 @@ export default function CrudPage({
   function handleSubmit(event) {
     event.preventDefault();
 
+    // Procura algum campo obrigatorio vazio.
     const missingField = fields.find((field) => {
       const value = form[field.key];
       return field.required && !String(value ?? "").trim();
@@ -42,11 +45,13 @@ export default function CrudPage({
     const cleanedForm = normalizeForm(form, fields);
 
     if (editingId) {
+      // Editando: troca somente o registro com o mesmo id.
       setItems((currentItems) =>
         currentItems.map((item) => (item.id === editingId ? { ...cleanedForm, id: editingId } : item))
       );
       setMessage("Registro atualizado.");
     } else {
+      // Cadastrando: cria um id e adiciona na lista.
       setItems((currentItems) => [...currentItems, { ...cleanedForm, id: createId() }]);
       setMessage("Registro cadastrado.");
     }
@@ -56,6 +61,7 @@ export default function CrudPage({
   }
 
   function handleEdit(item) {
+    // Coloca o registro escolhido de volta no formulario.
     setForm(item);
     setEditingId(item.id);
     setMessage("");
@@ -184,6 +190,7 @@ function FormField({ field, value, onChange }) {
 }
 
 function normalizeForm(form, fields) {
+  // Campos numericos precisam virar Number antes de salvar.
   return fields.reduce((newForm, field) => {
     const value = form[field.key];
     newForm[field.key] = field.type === "number" ? Number(value) : value;

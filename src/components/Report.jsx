@@ -1,10 +1,12 @@
 import { getOrderItems } from "./OrderManager.jsx";
 
 export default function Report({ beers, clients, orders }) {
+  // Um pedido com varias cervejas vira varias linhas no relatorio.
   const rows = orders.flatMap((order) => {
     const client = clients.find((item) => item.id === order.clienteId);
 
     return getOrderItems(order).map((orderItem) => {
+      // Aqui acontece o JOIN pelo id da cerveja.
       const beer = beers.find((item) => item.id === orderItem.cervejaId);
       const quantidade = Number(orderItem.quantidade);
       const subtotal = Number(beer?.preco || 0) * quantidade;
@@ -23,6 +25,7 @@ export default function Report({ beers, clients, orders }) {
     });
   });
 
+  // Total geral vendido.
   const total = rows.reduce((sum, row) => sum + row.subtotal, 0);
 
   return (

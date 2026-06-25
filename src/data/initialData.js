@@ -1,3 +1,4 @@
+// Dados iniciais para o projeto ja abrir com exemplo.
 export const initialBeers = [
   {
     id: "beer-1",
@@ -59,6 +60,7 @@ export const initialOrders = [
   {
     id: "order-1",
     clienteId: "client-1",
+    // Um pedido pode ter mais de uma cerveja.
     items: [
       { cervejaId: "beer-1", quantidade: 4 },
       { cervejaId: "beer-3", quantidade: 2 },

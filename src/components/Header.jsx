@@ -1,6 +1,7 @@
 import { useAuth } from "../context/AuthContext.jsx";
 import { assetPath } from "../utils/assetPath.js";
 
+// Menu que aparece para todo mundo.
 const publicPages = [
   { id: "inicio", label: "Inicio" },
   { id: "sobre", label: "Sobre a MARS" },
@@ -8,6 +9,7 @@ const publicPages = [
   { id: "adquira", label: "Adquira a sua" },
 ];
 
+// Menu que aparece so depois do login.
 const adminPages = [
   { id: "cervejas", label: "CRUD Cervejas" },
   { id: "clientes", label: "CRUD Clientes" },
@@ -36,6 +38,7 @@ export default function Header({ currentPage, onNavigate }) {
           </button>
         ))}
 
+        {/* Se tiver usuario logado, mostra os CRUDs. */}
         {user &&
           adminPages.map((page) => (
             <button

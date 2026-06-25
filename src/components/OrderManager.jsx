@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 
+// O pedido ja comeca com uma cerveja na lista.
 const emptyOrder = {
   clienteId: "",
   status: "",
@@ -12,6 +13,7 @@ export default function OrderManager({ orders, setOrders, clients, beers }) {
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState("");
 
+  // Deixa os pedidos mais recentes primeiro.
   const orderedOrders = useMemo(() => [...orders].sort((a, b) => String(b.data).localeCompare(String(a.data))), [orders]);
 
   function updateField(field, value) {
@@ -21,6 +23,8 @@ export default function OrderManager({ orders, setOrders, clients, beers }) {
 
   function updateItem(index, field, value) {
     setMessage("");
+
+    // Atualiza uma cerveja especifica dentro do pedido.
     setForm((currentForm) => ({
       ...currentForm,
       items: currentForm.items.map((item, itemIndex) => (itemIndex === index ? { ...item, [field]: value } : item)),
@@ -28,6 +32,7 @@ export default function OrderManager({ orders, setOrders, clients, beers }) {
   }
 
   function addItem() {
+    // Permite pedir mais de uma cerveja no mesmo pedido.
     setForm((currentForm) => ({
       ...currentForm,
       items: [...currentForm.items, { cervejaId: "", quantidade: "" }],
@@ -35,6 +40,7 @@ export default function OrderManager({ orders, setOrders, clients, beers }) {
   }
 
   function removeItem(index) {
+    // Nao deixa o pedido ficar sem nenhuma linha de cerveja.
     setForm((currentForm) => ({
       ...currentForm,
       items: currentForm.items.length === 1 ? currentForm.items : currentForm.items.filter((_, itemIndex) => itemIndex !== index),
@@ -61,6 +67,7 @@ export default function OrderManager({ orders, setOrders, clients, beers }) {
       return;
     }
 
+    // Limpo os dados antes de salvar na lista.
     const cleanedOrder = {
       clienteId: form.clienteId,
       status: form.status,
@@ -86,6 +93,7 @@ export default function OrderManager({ orders, setOrders, clients, beers }) {
   }
 
   function handleEdit(order) {
+    // Carrega o pedido clicado para alterar.
     setForm({
       clienteId: order.clienteId || "",
       status: order.status || "",
@@ -251,6 +259,7 @@ export default function OrderManager({ orders, setOrders, clients, beers }) {
 }
 
 export function getOrderItems(order) {
+  // Ajuda o relatorio a ler pedido novo e pedido antigo.
   if (Array.isArray(order.items) && order.items.length > 0) return order.items;
   if (order.cervejaId) return [{ cervejaId: order.cervejaId, quantidade: Number(order.quantidade) || 1 }];
   return [{ cervejaId: "", quantidade: "" }];
@@ -266,6 +275,7 @@ function formatOrderItems(order, beers) {
 }
 
 function calculateOrderTotal(order, beers) {
+  // Soma o valor de todas as cervejas do pedido.
   return getOrderItems(order).reduce((total, item) => {
     const beer = beers.find((currentBeer) => currentBeer.id === item.cervejaId);
     return total + Number(beer?.preco || 0) * Number(item.quantidade || 0);
